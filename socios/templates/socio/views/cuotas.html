@@ -1,0 +1,22 @@
+{% extends "web/root/origin.html" %}
+{% load static %}
+{% static "" as baseUrl %}
+
+{% block title %}
+    {{ nameWeb }} {{ title }}
+{% endblock %}
+
+{% block header %} 
+    {% include "socio/header/header_socios.html" %}
+{% endblock %}
+
+{% block body %}
+    {% include "socio/banner/banner_general.html" %}
+    {% if error_cuotas %}
+    <div  class="container marketing ">
+        <h3>No se encontraron cuotas para este usuario.</h3>
+    </div>
+    {% else %}
+    {% include "socio/form/form_cuotas.html" %}
+    {% endif %}
+{% endblock %}

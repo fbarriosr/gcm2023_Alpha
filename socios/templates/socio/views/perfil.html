@@ -1,0 +1,124 @@
+{% extends "web/root/origin.html" %} 
+{% load static %} 
+{% static "" as baseUrl %} 
+{% block title %} 
+  {{nameWeb}} {{ title }} 
+{% endblock %} 
+
+{% block header %} 
+
+      {% include "socio/header/header_socios.html" %}
+
+{% endblock %}
+
+{% block appJsCss %}
+
+<link href="{% static 'socio/css/toastr.min.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block body %}
+      
+      
+
+      <div class="container marketing" id="contacto">
+        
+        <div class="row">
+          
+          <div class="col-lg-12 text-center"><br><br>
+            <img src="{% static 'web/assets/logos/laurelDorado.png' %}  " style="padding-bottom: 0px!important; padding-top: 20px!important" />
+            <h1 class="text-center" style="padding:5px">{{ titulo | upper}}</h1>
+            <h4 class="text-center"style="padding-bottom:15px" > {{ name | upper}}</h4>
+          </div>
+        </div>
+    <!-- Three columns of text below the carousel -->
+        <form enctype="multipart/form-data" id="form_edicion" class="contact-form c-mb-30 c-gutter-30 col-lg-12" action= "{{urlForm}}"  method="POST" > {% csrf_token %}
+          <div class="row">
+                <div col-lg-12> <h1>Editable</h1></div>
+                <div class="col-lg-4 form-floating">
+                  {{form.primer_nombre}}
+                  <label> {{form.primer_nombre.label}}</label>
+                </div>
+                 <div class="col-lg-4 form-floating">
+                  {{form.segundo_nombre}}
+                  <label> {{form.segundo_nombre.label}}</label>
+                </div>
+                 <div class="col-lg-4 form-floating">
+                  {{form.apellido_paterno}}
+                  <label> {{form.apellido_paterno.label}}</label>
+                </div>
+                 <div class="col-lg-4 form-floating">
+                  {{form.apellido_materno}}
+                  <label> {{form.apellido_materno.label}}</label>
+                </div>
+                <div class="col-lg-3 form-floating">
+                  {{form.email}}
+                  <label> {{form.email.label}}</label>
+                </div>
+                <div class="col-lg-3 form-floating">
+                  {{form.telefono}}
+                  <label> {{form.telefono.label}}</label>
+                </div>
+                <div class="col-lg-3 form-floating">
+                  {{form.fecha_nacimiento}}
+                  <label> {{form.fecha_nacimiento.label}}</label>
+                </div>
+                
+                <div class="col-lg-3 form-floating">
+                  {{form.profesion}}
+                  <label> {{form.profesion.label}}</label>
+                </div>
+
+                <div class="col-lg-3 form-floating">
+                  {{form.direccion}}
+                  <label> {{form.direccion.label}}</label>
+                </div>
+
+                <div class="col-lg-3 form-floating">
+                  {{form.region}}
+                  <label> {{form.region.label}}</label>
+                </div>
+  
+                <div col-lg-12> 
+                  <h1>No Editables</h1>
+                </div>
+
+                <div class="col-lg-3 form-floating">
+                  {{form.rut}}
+                  <label> {{form.rut.label}}</label>
+                </div>
+
+
+                <div class="col-lg-3 form-floating">
+                  {{form.institucion }}
+                  <label> {{form.institucion.label}}</label>
+                </div>
+                <div class="col-lg-3 form-floating">
+                  {{form.grado}}
+                  <label> {{form.grado.label}}</label>
+                </div>
+          </div>
+          <div class="row justify-content-end">
+              <div class="col-lg-3">
+                  <button type="button" onclick="updatePerfil()"  class="btn btn-primary"><strong>{{ btnAction }}</strong></button>
+              </div>
+          </div>
+          <div> <p style="padding-top:20px">* Nota si encuentra error en los datos no editables enviar un correo al Secretario al e-mail <strong>secretario@golfmilitar.cl</strong></p></div>
+        </form>
+      </div>
+
+     
+
+
+
+
+{% endblock %}
+
+
+{% block extraJs %} 
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script> 
+<script src="{% static 'socio/js/toastr.min.js' %}"></script> 
+<script src="{% static 'socio/js/notificaciones.js' %}"></script>
+<script src="{% static 'socio/js/solicitud.js' %}"></script>  
+
+{% endblock %}

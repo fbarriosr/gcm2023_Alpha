@@ -1,0 +1,39 @@
+{% extends "web/root/origin.html" %} 
+{% load static %} 
+{% static "" as baseUrl %} 
+{% block title %} 
+  {{nameWeb}} {{ title }} 
+{% endblock %} 
+
+{% block header %} 
+
+      {% include "socio/header/header_socios.html" %}
+
+{% endblock %}
+
+{% block body %}
+
+ {% include "socio/banner/banner_general.html" %}
+
+<!-- /.container -->
+<div class="row justify-content-end">
+    {% if rol == 'SECR' or rol == 'SUPER' %}
+        <div class="col-lg-2 dropdown" style="padding-top:15px">
+          <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            SECRETARIO
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'rankingUpdate'%}">ACTUALIZAR</a></li>
+          </ul>
+        </div>
+    {%endif%}
+</div> 
+
+ {% include "web/front/front.html" %}
+
+
+
+
+<!-- /.container -->
+
+{% endblock %}

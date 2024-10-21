@@ -1,0 +1,17 @@
+{% extends "web/root/origin.html" %} 
+{% load static %} 
+{% static "" as baseUrl %} 
+{% block title %} 
+  {{nameWeb}} {{ title }} 
+{% endblock %} 
+
+{% block body %}
+
+  {% include "web/banner/bannerSolo.html" %}
+  
+  <!-- /.container -->
+  {% include "web/front/front.html" %}
+
+<!-- /.container -->
+
+{% endblock %}
