@@ -35,12 +35,23 @@ from .utils import *
 from .choices import estado_cuota
 
 from itertools import chain
-from transbank.webpay.webpay_plus.transaction import Transaction
+from django.conf import settings
 import logging, random, json, requests , csv
+
+from transbank.webpay.webpay_plus.transaction import Transaction, WebpayOptions
+from transbank.common.integration_type import IntegrationType
+
+commerce_code = settings.COMMERCE_CODE
+api_key = settings.API_KEY
+
+
+tx = Transaction(WebpayOptions(commerce_code, api_key, IntegrationType.LIVE))
 
 logger = logging.getLogger(__name__)
 
 nameWeb = "CGM"
+
+
 
 # Plantilla con formulario para facilitar las operaciones masivas de las cuotas de usuarios
 class OperacionesCuotasView(View):
@@ -475,6 +486,8 @@ class crearSolicitud(AutentificadoMixin,CreateView):
 
     def get_form(self, form_class=None):
 
+        #print('commerce_code ',commerce_code )
+        #print('api_key ',api_key)
         
         fecha_actual = datetime.now()
 
@@ -569,6 +582,7 @@ class crearSolicitud(AutentificadoMixin,CreateView):
     def get(self, *args, **kwargs):
         request = self.request
         token = request.GET.get("token_ws")
+
 
         # Si hubo una transaccion, procesa su respuesta y actualiza la DB.
         if token:
@@ -745,7 +759,7 @@ class crearSolicitud(AutentificadoMixin,CreateView):
             buy_order = str(random.randrange(1000000, 99999999))
             session_id = str(random.randrange(1000000, 99999999))
             amount = str(monto)
-            return_url = request.build_absolute_uri(reverse('solicitud')).replace('http://','https://')
+            return_url = request.build_absolute_uri(reverse('solicitud'))
 
             create_request, response = crearTransaccion(buy_order, session_id, amount, return_url)
 

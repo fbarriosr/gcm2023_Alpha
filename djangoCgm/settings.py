@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import environ
 import os
 from pathlib import Path
 from django.conf.global_settings import DATETIME_INPUT_FORMATS
@@ -21,6 +21,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
+
+# Inicializa el entorno
+env = environ.Env()
+# Lee el archivo .env desde la raíz
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# Define las variables de entorno como variables de configuración
+COMMERCE_CODE = env('COMMERCE_CODE')
+API_KEY = env('API_KEY')
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '=*kh7x@+^7)vfq6%h-0g^9!=&$l1jcy!zz8#4+#u^0kbd4^bg5'

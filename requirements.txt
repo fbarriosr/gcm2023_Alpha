@@ -22,3 +22,5 @@ django-import-export
 urllib3==1.26.7
 transbank-sdk==5.0.0
 python-dateutil
+
+django-environ
