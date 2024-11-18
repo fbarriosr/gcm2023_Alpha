@@ -41,11 +41,6 @@ import logging, random, json, requests , csv
 from transbank.webpay.webpay_plus.transaction import Transaction, WebpayOptions
 from transbank.common.integration_type import IntegrationType
 
-commerce_code = settings.COMMERCE_CODE
-api_key = settings.API_KEY
-
-
-tx = Transaction(WebpayOptions(commerce_code, api_key, IntegrationType.LIVE))
 
 logger = logging.getLogger(__name__)
 
@@ -759,8 +754,9 @@ class crearSolicitud(AutentificadoMixin,CreateView):
             buy_order = str(random.randrange(1000000, 99999999))
             session_id = str(random.randrange(1000000, 99999999))
             amount = str(monto)
-            return_url = request.build_absolute_uri(reverse('solicitud')).replace('http://', 'https://')
-
+            return_url = request.build_absolute_uri(reverse('solicitud'))
+            return_url = return_url if 'localhost' in return_url else return_url.replace('http://', 'https://')
+            
             create_request, response = crearTransaccion(buy_order, session_id, amount, return_url)
 
 
@@ -840,17 +836,22 @@ class ranking(AutentificadoMixin,TemplateView):
         return contexto
     
 def crearTransaccion(buy_order, session_id, amount, return_url):
+    commerce_code = settings.COMMERCE_CODE
+    api_key = settings.API_KEY
     create_request = {
         "buy_order": buy_order,
         "session_id": session_id,
         "amount": amount,
         "return_url": return_url
     }
-
-    response = (Transaction()).create(buy_order, session_id, amount, return_url)
+    
+    # Crear una instancia de Transaction con las opciones correctas para el entorno de producción
+    tx = Transaction(WebpayOptions(settings.COMMERCE_CODE, settings.API_KEY, IntegrationType.LIVE))
+    
+    # Usar esta instancia configurada para crear la transacción
+    response = tx.create(buy_order, session_id, amount, return_url)
     
     return create_request, response
-
 
 def procesar_transaccion(request):
     # Obtener los datos de la sesión
@@ -1003,7 +1004,9 @@ class cuotas(SociosMixin, TemplateView, View):
         buy_order = str(random.randrange(1000000, 99999999))
         session_id = str(random.randrange(1000000, 99999999))
         amount = str(total_pagar)
-        return_url = request.build_absolute_uri(reverse('cuotas')).replace('http://', 'https://')
+        
+        return_url = request.build_absolute_uri(reverse('cuotas'))
+        return_url = return_url if 'localhost' in return_url else return_url.replace('http://', 'https://')
         create_request, response = crearTransaccion(buy_order, session_id, amount, return_url)
 
         # Almacenar los datos en la sesión

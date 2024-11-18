@@ -53,9 +53,23 @@ class CardsInicio(models.Model):
         return self.titulo
 
     def save(self, *args, **kwargs):
-        # Utilizar la función global para limpiar los nombres de archivos
-        if self.img:
-            self.img.name = clean_filename(self.img.name)
+        # Si el objeto ya existe (es una actualización)
+        if self.pk:
+            existing = CardsInicio.objects.get(pk=self.pk)
+
+             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            if not self.img:
+                self.img = existing.img
+            else:
+                # Limpiar el nombre solo si el archivo es nuevo
+                if self.img != existing.img:
+                    self.img.name = clean_filename(self.img.name)
+
+        else:
+            # Si es un nuevo objeto, limpiar el nombre de archivo si existen
+            if self.img:
+                self.img.name = clean_filename(self.img.name)
+           
         super(CardsInicio, self).save(*args, **kwargs)
 
 
@@ -98,8 +112,8 @@ class Paginas_Socio(models.Model):
                 self.file = existing.file
             else:
                 # Limpiar el nombre solo si el archivo es nuevo
-                if self.archivo != existing.archivo:
-                    self.archivo.name = clean_filename(self.archivo.name)
+                if self.file!= existing.file:
+                    self.file.name = clean_filename(self.file.name)
 
             # Solo sobrescribir imagen si se ha proporcionado una nueva imagen
             if not self.img:
@@ -145,9 +159,23 @@ class Multimedia (models.Model):
         return self.titulo
 
     def save(self, *args, **kwargs):
-        # Utilizar la función global para limpiar los nombres de archivos
-        if self.img:
-            self.img.name = clean_filename(self.img.name)
+        # Si el objeto ya existe (es una actualización)
+        if self.pk:
+            existing = Multimedia.objects.get(pk=self.pk)
+
+             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            if not self.img:
+                self.img = existing.img
+            else:
+                # Limpiar el nombre solo si el archivo es nuevo
+                if self.img != existing.img:
+                    self.img.name = clean_filename(self.img.name)
+
+        else:
+            # Si es un nuevo objeto, limpiar el nombre de archivo si existen
+            if self.img:
+                self.img.name = clean_filename(self.img.name)
+           
         super(Multimedia, self).save(*args, **kwargs)
 
 class MultimediaImg(models.Model):
@@ -209,9 +237,23 @@ class Noticia (models.Model):
         return self.titulo
 
     def save(self, *args, **kwargs):
-        # Utilizar la función global para limpiar los nombres de archivos
-        if self.img:
-            self.img.name = clean_filename(self.img.name)
+        # Si el objeto ya existe (es una actualización)
+        if self.pk:
+            existing = Noticia.objects.get(pk=self.pk)
+
+             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            if not self.img:
+                self.img = existing.img
+            else:
+                # Limpiar el nombre solo si el archivo es nuevo
+                if self.img != existing.img:
+                    self.img.name = clean_filename(self.img.name)
+
+        else:
+            # Si es un nuevo objeto, limpiar el nombre de archivo si existen
+            if self.img:
+                self.img.name = clean_filename(self.img.name)
+           
         super(Noticia, self).save(*args, **kwargs)
 
 class NoticiaImg(models.Model):

@@ -13,7 +13,19 @@ from usuarios.models import Usuario
 from .choices import *
 from import_export.admin import ImportExportModelAdmin
 from django.utils.html import format_html
+import os
+from django.utils.text import slugify
 
+def clean_filename(filename):
+    """
+    Limpia el nombre del archivo eliminando caracteres no permitidos.
+    """
+    # Separar el nombre del archivo de su extensión
+    name, ext = os.path.splitext(filename)
+    # Convertir el nombre a una forma válida
+    name = slugify(name)
+    # Recombinar el nombre limpio con su extensión original
+    return f"{name}{ext}"
 
 # Create your models here.
 class UsuarioFilter(AutocompleteFilter):
@@ -36,11 +48,24 @@ class Galeria(models.Model):
         return self.titulo
 
     def save(self, *args, **kwargs):
-        # Utilizar la función global para limpiar los nombres de archivos
-        if self.img:
-            self.img.name = clean_filename(self.img.name)
-        super(Galeria, self).save(*args, **kwargs)
+        # Si el objeto ya existe (es una actualización)
+        if self.pk:
+            existing = Galeria.objects.get(pk=self.pk)
 
+             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            if not self.img:
+                self.img = existing.img
+            else:
+                # Limpiar el nombre solo si el archivo es nuevo
+                if self.img != existing.img:
+                    self.img.name = clean_filename(self.img.name)
+
+        else:
+            # Si es un nuevo objeto, limpiar el nombre de archivo si existen
+            if self.img:
+                self.img.name = clean_filename(self.img.name)
+           
+        super(Galeria,self).save(*args, **kwargs)
 
 
 class GaleriaAdmin(SearchAutoCompleteAdmin, admin.ModelAdmin):
@@ -73,9 +98,23 @@ class Links(models.Model):
         return self.titulo
 
     def save(self, *args, **kwargs):
-        # Utilizar la función global para limpiar los nombres de archivos
-        if self.img:
-            self.img.name = clean_filename(self.img.name)
+        # Si el objeto ya existe (es una actualización)
+        if self.pk:
+            existing = Links.objects.get(pk=self.pk)
+
+             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            if not self.img:
+                self.img = existing.img
+            else:
+                # Limpiar el nombre solo si el archivo es nuevo
+                if self.img != existing.img:
+                    self.img.name = clean_filename(self.img.name)
+
+        else:
+            # Si es un nuevo objeto, limpiar el nombre de archivo si existen
+            if self.img:
+                self.img.name = clean_filename(self.img.name)
+           
         super(Links, self).save(*args, **kwargs)
 
 class LinksAdmin(SearchAutoCompleteAdmin, admin.ModelAdmin):
@@ -107,9 +146,31 @@ class Paginas_Web(models.Model):
     def __str__(self):
         return self.titulo
     def save(self, *args, **kwargs):
-        # Utilizar la función global para limpiar los nombres de archivos
-        if self.img:
-            self.img.name = clean_filename(self.img.name)
+        # Si el objeto ya existe (es una actualización)
+        if self.pk:
+            existing = Paginas_Web.objects.get(pk=self.pk)
+
+             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            if not self.img:
+                self.img = existing.img
+            else:
+                # Limpiar el nombre solo si el archivo es nuevo
+                if self.img != existing.img:
+                    self.img.name = clean_filename(self.img.name)
+
+             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            if not self.file:
+                self.file = existing.file
+            else:
+                # Limpiar el nombre solo si el archivo es nuevo
+                if self.file != existing.file:
+                    self.file.name = clean_filename(self.file.name)
+        else:
+            # Si es un nuevo objeto, limpiar el nombre de archivo si existen
+            if self.img:
+                self.img.name = clean_filename(self.img.name)
+            if self.file:
+                self.file.name = clean_filename(self.file.name)
         super(Paginas_Web, self).save(*args, **kwargs)
 
 
@@ -167,6 +228,26 @@ class Listado (models.Model):
     def __str__(self):
         return self.titulo
 
+    def save(self, *args, **kwargs):
+        # Si el objeto ya existe (es una actualización)
+        if self.pk:
+            existing = Listado.objects.get(pk=self.pk)
+
+             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            if not self.img:
+                self.img = existing.img
+            else:
+                # Limpiar el nombre solo si el archivo es nuevo
+                if self.img != existing.img:
+                    self.img.name = clean_filename(self.img.name)
+
+        else:
+            # Si es un nuevo objeto, limpiar el nombre de archivo si existen
+            if self.img:
+                self.img.name = clean_filename(self.img.name)
+           
+        super(Listado ,self).save(*args, **kwargs)
+
 
 
 class ListadosAdmin(SearchAutoCompleteAdmin, admin.ModelAdmin):
@@ -211,6 +292,25 @@ class Card(models.Model):
 
     def __str__(self):
         return self.titulo
+    def save(self, *args, **kwargs):
+        # Si el objeto ya existe (es una actualización)
+        if self.pk:
+            existing = Card.objects.get(pk=self.pk)
+
+             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            if not self.img:
+                self.img = existing.img
+            else:
+                # Limpiar el nombre solo si el archivo es nuevo
+                if self.img != existing.img:
+                    self.img.name = clean_filename(self.img.name)
+
+        else:
+            # Si es un nuevo objeto, limpiar el nombre de archivo si existen
+            if self.img:
+                self.img.name = clean_filename(self.img.name)
+           
+        super(Card ,self).save(*args, **kwargs)
 
 
 class CardsAdmin(SearchAutoCompleteAdmin, admin.ModelAdmin):

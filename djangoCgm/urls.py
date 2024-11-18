@@ -24,7 +24,6 @@ Including another URLconf
 from django.urls import path, include, re_path
 from django.urls import re_path as url 
 
-from django.conf.urls import ( handler404, handler500)
 from django.conf import settings
 from django.views.static import serve
 
@@ -37,7 +36,7 @@ from django.conf.urls.static import static
 from web.views import *
 from usuarios.views import *
 from socios.views import *
-
+from django.conf.urls import handler400,handler403,handler404, handler500
 
 admin.autodiscover()
 urlpatterns = [
@@ -52,3 +51,9 @@ urlpatterns = [
     path('',include('tesorero.urls')),
 
 ] 
+
+# Configurar el handler404 para errores 404
+handler400 = 'web.views.custom_400_handler'
+handler403 = 'web.views.custom_403_handler'
+handler404 = 'web.views.custom_404_handler'
+handler500 = 'web.views.custom_500_handler'

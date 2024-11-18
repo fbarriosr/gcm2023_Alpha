@@ -36,7 +36,7 @@ API_KEY = env('API_KEY')
 SECRET_KEY = '=*kh7x@+^7)vfq6%h-0g^9!=&$l1jcy!zz8#4+#u^0kbd4^bg5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 X_FRAME_OPTIONS = 'SAMEORIGIN'

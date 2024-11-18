@@ -34,7 +34,8 @@ from socios.utils import contact
 from .forms import FormHome
 from django.http import JsonResponse
 from django.http import HttpResponseNotFound
-
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseBadRequest
 
 nameWeb = "CGM"
 
@@ -105,6 +106,17 @@ class historia(TemplateView):
 
         return contexto
 
+def simulate_500_error(request):
+    result = 1 / 0  # Esto generará un ZeroDivisionError
+    return result
+
+def simulate_403_error(request):
+    raise PermissionDenied("Simulación de un error 403")
+
+def simulate_400_error(request):
+    raise BadRequest("Simulación de un error 400")
+
+
 class NotFound404(TemplateView):
     template_name = "web/views/404.html"
 
@@ -119,9 +131,68 @@ class NotFound404(TemplateView):
         contexto['linksMenu'] = list(linksMenu.values('url', 'titulo'))
         return contexto
 
+class NotFound500(TemplateView):
+    template_name = "web/views/404.html"
 
-def handler404(request, exception):
-    return HttpResponseNotFound(NotFound404.as_view()(request=request).content)
+    def get_context_data(self, **kwargs):
+        contexto = super().get_context_data(**kwargs)
+        contexto["nameWeb"] = nameWeb
+        
+        dato = Paginas_Web.objects.get(tipo ="500")
+        contexto['value']  = dato
+        contexto["title"] = dato.tituloPestana
+        linksMenu = Links.objects.filter(banner=False).order_by('tipo','order')
+        contexto['linksMenu'] = list(linksMenu.values('url', 'titulo'))
+        return contexto
+
+class NotFound403(TemplateView):
+    template_name = "web/views/404.html"
+
+    def get_context_data(self, **kwargs):
+        contexto = super().get_context_data(**kwargs)
+        contexto["nameWeb"] = nameWeb
+        
+        dato = Paginas_Web.objects.get(tipo ="403")
+        contexto['value']  = dato
+        contexto["title"] = dato.tituloPestana
+        linksMenu = Links.objects.filter(banner=False).order_by('tipo','order')
+        contexto['linksMenu'] = list(linksMenu.values('url', 'titulo'))
+        return contexto
+
+class NotFound400(TemplateView):
+    template_name = "web/views/404.html"
+
+    def get_context_data(self, **kwargs):
+        contexto = super().get_context_data(**kwargs)
+        contexto["nameWeb"] = nameWeb
+        
+        dato = Paginas_Web.objects.get(tipo ="400")
+        contexto['value']  = dato
+        contexto["title"] = dato.tituloPestana
+        linksMenu = Links.objects.filter(banner=False).order_by('tipo','order')
+        contexto['linksMenu'] = list(linksMenu.values('url', 'titulo'))
+        return contexto
+
+def custom_400_handler(request, exception):
+    response = NotFound400.as_view()(request)
+    response.status_code = 400
+    return response
+    
+def custom_403_handler(request, exception):
+    response = NotFound403.as_view()(request)
+    response.status_code = 403
+    return response
+
+def custom_500_handler(request):
+    response = NotFound500.as_view()(request)
+    response.status_code = 500
+    return response
+
+def custom_404_handler(request, exception):
+    response = NotFound404.as_view()(request)
+    response.status_code = 404
+    return response
+
 
 class comite(TemplateView):
     template_name = "web/views/comite.html"
