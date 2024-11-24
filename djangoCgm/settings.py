@@ -5,6 +5,7 @@ Django settings for djangoCgm project.
 import environ
 import os
 from pathlib import Path
+from django.conf.global_settings import DATETIME_INPUT_FORMATS
 
 # Inicializa las variables de entorno
 env = environ.Env(
@@ -12,8 +13,14 @@ env = environ.Env(
 )
 environ.Env.read_env()  # Lee las variables del archivo .env
 
+#for key, value in env.ENVIRON.items():
+#    print(f"{key}: {value}")
+
 # Paths
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
 
 # Seguridad
 
@@ -139,8 +146,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')  # Desde el .env
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')  # Desde el .env
+EMAIL_HOST_USER = env('EMAIL_USER')  # Desde el .env
+EMAIL_HOST_PASSWORD = env('EMAIL_PASSWORD')  # Desde el .env
 EMAIL_USE_TLS = True
 
 # reCAPTCHA

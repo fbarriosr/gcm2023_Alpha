@@ -41,6 +41,8 @@ services:
       - .:/code
       - static_volume:/code/staticfiles
       - media_volume:/code/media
+      - ./.env:/code/.env  # Asegúrate de montar el archivo .env
+
     expose:
       - "8000"
     environment:
@@ -50,7 +52,6 @@ services:
       - DEBUG=False
       - SECRET_KEY=${SECRET_KEY}
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
-      - DATABASE_URL=${DATABASE_URL}
 
 volumes:
   static_volume: {}
