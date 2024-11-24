@@ -96,3 +96,15 @@ $ docker run
 
 $ docker run -it --name contenedor imagen
 ```
+
+### RESET 
+```
+$ docker-compose exec web python manage.py reset_passwords
+
+```
+
+### KEY 
+```
+docker-compose run web python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+
+```

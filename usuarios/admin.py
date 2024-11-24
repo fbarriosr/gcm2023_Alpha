@@ -97,7 +97,7 @@ class UserAdmin(ImportExportModelAdmin,BaseUserAdmin):
     ordering = ["apellido_paterno",'rut']
     filter_horizontal = []
     list_editable =('categoria','estado','perfil','condicion','fecha_incorporacion','tiempoGracia')
-
+    list_per_page = 20
 
 # Now register the new UserAdmin...
 admin.site.register(Usuario, UserAdmin )

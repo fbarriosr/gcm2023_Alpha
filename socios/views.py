@@ -581,8 +581,10 @@ class crearSolicitud(AutentificadoMixin,CreateView):
 
         # Si hubo una transaccion, procesa su respuesta y actualiza la DB.
         if token:
-            print('token detectado')  
-            respuestaTransaccion = (Transaction()).commit(token=token)
+            print('token detectado') 
+            tx = Transaction(WebpayOptions(settings.COMMERCE_CODE, settings.API_KEY, IntegrationType.LIVE))
+
+            respuestaTransaccion = tx.commit(token=token)
         
             status = respuestaTransaccion['status']
 
@@ -963,7 +965,9 @@ class cuotas(SociosMixin, TemplateView, View):
 
         if token: 
             # Si hubo una transaccion, procesa su respuesta y actualiza la DB.
-            respuestaTransaccion = (Transaction()).commit(token=token)
+            tx = Transaction(WebpayOptions(settings.COMMERCE_CODE, settings.API_KEY, IntegrationType.LIVE))
+
+            respuestaTransaccion = tx.commit(token=token)
             resultadoTransaccion = Cuotas.actualizaEstadoCuotas(request, respuestaTransaccion)
             # Almacena los datos del token y la respuesta de la transacción en la sesión
             request.session['token'] = token
