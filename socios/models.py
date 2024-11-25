@@ -53,24 +53,25 @@ class CardsInicio(models.Model):
         return self.titulo
 
     def save(self, *args, **kwargs):
-        # Si el objeto ya existe (es una actualización)
-        if self.pk:
+        # Verificar si el objeto ya existe (es una actualización)
+        if self.pk and CardsInicio.objects.filter(pk=self.pk).exists():
             existing = CardsInicio.objects.get(pk=self.pk)
 
-             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            # Solo sobrescribir `img` si no se ha proporcionado un nuevo archivo
             if not self.img:
                 self.img = existing.img
             else:
                 # Limpiar el nombre solo si el archivo es nuevo
                 if self.img != existing.img:
                     self.img.name = clean_filename(self.img.name)
-
         else:
-            # Si es un nuevo objeto, limpiar el nombre de archivo si existen
+            # Si es un nuevo objeto, limpiar el nombre del archivo si existe
             if self.img:
                 self.img.name = clean_filename(self.img.name)
-           
+
+        # Llamar al método save original
         super(CardsInicio, self).save(*args, **kwargs)
+
 
 
 class CardsInicioAdmin(SearchAutoCompleteAdmin, admin.ModelAdmin):
@@ -103,26 +104,25 @@ class Paginas_Socio(models.Model):
         return self.titulo
 
     def save(self, *args, **kwargs):
-        # Si el objeto ya existe (es una actualización)
-        if self.pk:
+        # Verificar si el objeto ya existe (es una actualización)
+        if self.pk and Paginas_Socio.objects.filter(pk=self.pk).exists():
             existing = Paginas_Socio.objects.get(pk=self.pk)
 
-            # Solo sobrescribir file si se ha proporcionado un nuevo archivo
+            # Solo sobrescribir `file` si no se ha proporcionado un nuevo archivo
             if not self.file:
                 self.file = existing.file
             else:
                 # Limpiar el nombre solo si el archivo es nuevo
-                if self.file!= existing.file:
+                if self.file != existing.file:
                     self.file.name = clean_filename(self.file.name)
 
-            # Solo sobrescribir imagen si se ha proporcionado una nueva imagen
+            # Solo sobrescribir `img` si no se ha proporcionado una nueva imagen
             if not self.img:
                 self.img = existing.img
             else:
                 # Limpiar el nombre solo si la imagen es nueva
                 if self.img != existing.img:
                     self.img.name = clean_filename(self.img.name)
-
         else:
             # Si es un nuevo objeto, limpiar el nombre de archivo e imagen si existen
             if self.file:
@@ -130,6 +130,7 @@ class Paginas_Socio(models.Model):
             if self.img:
                 self.img.name = clean_filename(self.img.name)
 
+        # Llamar al método save original
         super(Paginas_Socio, self).save(*args, **kwargs)
 
 
@@ -159,24 +160,25 @@ class Multimedia (models.Model):
         return self.titulo
 
     def save(self, *args, **kwargs):
-        # Si el objeto ya existe (es una actualización)
-        if self.pk:
+        # Verificar si el objeto ya existe (es una actualización)
+        if self.pk and Multimedia.objects.filter(pk=self.pk).exists():
             existing = Multimedia.objects.get(pk=self.pk)
 
-             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            # Solo sobrescribir `img` si no se ha proporcionado un nuevo archivo
             if not self.img:
                 self.img = existing.img
             else:
                 # Limpiar el nombre solo si el archivo es nuevo
                 if self.img != existing.img:
                     self.img.name = clean_filename(self.img.name)
-
         else:
-            # Si es un nuevo objeto, limpiar el nombre de archivo si existen
+            # Si es un nuevo objeto, limpiar el nombre del archivo si existe
             if self.img:
                 self.img.name = clean_filename(self.img.name)
-           
+
+        # Llamar al método save original
         super(Multimedia, self).save(*args, **kwargs)
+
 
 class MultimediaImg(models.Model):
     multimedia = models.ForeignKey(Multimedia, default=None, on_delete=models.CASCADE)
@@ -237,24 +239,25 @@ class Noticia (models.Model):
         return self.titulo
 
     def save(self, *args, **kwargs):
-        # Si el objeto ya existe (es una actualización)
-        if self.pk:
+        # Verificar si el objeto ya existe (es una actualización)
+        if self.pk and Noticia.objects.filter(pk=self.pk).exists():
             existing = Noticia.objects.get(pk=self.pk)
 
-             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            # Solo sobrescribir `img` si no se ha proporcionado un nuevo archivo
             if not self.img:
                 self.img = existing.img
             else:
                 # Limpiar el nombre solo si el archivo es nuevo
                 if self.img != existing.img:
                     self.img.name = clean_filename(self.img.name)
-
         else:
-            # Si es un nuevo objeto, limpiar el nombre de archivo si existen
+            # Si es un nuevo objeto, limpiar el nombre del archivo si existe
             if self.img:
                 self.img.name = clean_filename(self.img.name)
-           
+
+        # Llamar al método save original
         super(Noticia, self).save(*args, **kwargs)
+
 
 class NoticiaImg(models.Model):
     noticia = models.ForeignKey(Noticia, default=None, on_delete=models.CASCADE)
@@ -320,11 +323,11 @@ class Torneo (models.Model):
         ordering    = ['-fecha']
 
     def save(self, *args, **kwargs):
-        # Si el objeto ya existe (es una actualización)
-        if self.pk:
+        # Verificar si el objeto ya existe (es una actualización)
+        if self.pk and Torneo.objects.filter(pk=self.pk).exists():
             existing = Torneo.objects.get(pk=self.pk)
 
-            # Solo sobrescribir bases si se ha proporcionado un nuevo archivo
+            # Solo sobrescribir `bases` si no se ha proporcionado un nuevo archivo
             if not self.bases:
                 self.bases = existing.bases
             else:
@@ -332,7 +335,7 @@ class Torneo (models.Model):
                 if self.bases != existing.bases:
                     self.bases.name = clean_filename(self.bases.name)
 
-            # Solo sobrescribir list_salidas si se ha proporcionado un nuevo archivo
+            # Solo sobrescribir `list_salidas` si no se ha proporcionado un nuevo archivo
             if not self.list_salidas:
                 self.list_salidas = existing.list_salidas
             else:
@@ -340,7 +343,7 @@ class Torneo (models.Model):
                 if self.list_salidas != existing.list_salidas:
                     self.list_salidas.name = clean_filename(self.list_salidas.name)
 
-            # Solo sobrescribir resultados si se ha proporcionado un nuevo archivo
+            # Solo sobrescribir `resultados` si no se ha proporcionado un nuevo archivo
             if not self.resultados:
                 self.resultados = existing.resultados
             else:
@@ -348,7 +351,7 @@ class Torneo (models.Model):
                 if self.resultados != existing.resultados:
                     self.resultados.name = clean_filename(self.resultados.name)
 
-            # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            # Solo sobrescribir `premiacion` si no se ha proporcionado un nuevo archivo
             if not self.premiacion:
                 self.premiacion = existing.premiacion
             else:
@@ -366,7 +369,9 @@ class Torneo (models.Model):
             if self.premiacion:
                 self.premiacion.name = clean_filename(self.premiacion.name)
 
+        # Llamar al método save original
         super(Torneo, self).save(*args, **kwargs)
+
 
 class TorneoAdmin (ImportExportModelAdmin,SearchAutoCompleteAdmin, admin.ModelAdmin):
     search_fields   = ['titulo']
@@ -423,11 +428,11 @@ class ElClub(models.Model):
         return self.titulo
 
     def save(self, *args, **kwargs):
-        # Si el objeto ya existe (es una actualización)
-        if self.pk:
+        # Verificar si el objeto ya existe (es una actualización)
+        if self.pk and ElClub.objects.filter(pk=self.pk).exists():
             existing = ElClub.objects.get(pk=self.pk)
 
-            # Solo sobrescribir archivo si se ha proporcionado un nuevo archivo
+            # Solo sobrescribir `archivo` si no se ha proporcionado un nuevo archivo
             if not self.archivo:
                 self.archivo = existing.archivo
             else:
@@ -435,14 +440,13 @@ class ElClub(models.Model):
                 if self.archivo != existing.archivo:
                     self.archivo.name = clean_filename(self.archivo.name)
 
-            # Solo sobrescribir imagen si se ha proporcionado una nueva imagen
+            # Solo sobrescribir `img` si no se ha proporcionado una nueva imagen
             if not self.img:
                 self.img = existing.img
             else:
                 # Limpiar el nombre solo si la imagen es nueva
                 if self.img != existing.img:
                     self.img.name = clean_filename(self.img.name)
-
         else:
             # Si es un nuevo objeto, limpiar el nombre de archivo e imagen si existen
             if self.archivo:
@@ -450,6 +454,7 @@ class ElClub(models.Model):
             if self.img:
                 self.img.name = clean_filename(self.img.name)
 
+        # Llamar al método save original
         super(ElClub, self).save(*args, **kwargs)
 
 class ElClubAdmin(SearchAutoCompleteAdmin, admin.ModelAdmin):

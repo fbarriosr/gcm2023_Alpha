@@ -48,24 +48,25 @@ class Galeria(models.Model):
         return self.titulo
 
     def save(self, *args, **kwargs):
-        # Si el objeto ya existe (es una actualización)
-        if self.pk:
+        # Verificar si el objeto ya existe (es una actualización)
+        if self.pk and Galeria.objects.filter(pk=self.pk).exists():
             existing = Galeria.objects.get(pk=self.pk)
 
-             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            # Solo sobrescribir `img` si no se ha proporcionado un nuevo archivo
             if not self.img:
                 self.img = existing.img
             else:
                 # Limpiar el nombre solo si el archivo es nuevo
                 if self.img != existing.img:
                     self.img.name = clean_filename(self.img.name)
-
         else:
-            # Si es un nuevo objeto, limpiar el nombre de archivo si existen
+            # Si es un nuevo objeto, limpiar el nombre del archivo si existe
             if self.img:
                 self.img.name = clean_filename(self.img.name)
-           
-        super(Galeria,self).save(*args, **kwargs)
+
+        # Llamar al método save original
+        super(Galeria, self).save(*args, **kwargs)
+
 
 
 class GaleriaAdmin(SearchAutoCompleteAdmin, admin.ModelAdmin):
@@ -98,24 +99,25 @@ class Links(models.Model):
         return self.titulo
 
     def save(self, *args, **kwargs):
-        # Si el objeto ya existe (es una actualización)
-        if self.pk:
+        # Verificar si el objeto ya existe (es una actualización)
+        if self.pk and Links.objects.filter(pk=self.pk).exists():
             existing = Links.objects.get(pk=self.pk)
 
-             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            # Solo sobrescribir `img` si no se ha proporcionado un nuevo archivo
             if not self.img:
                 self.img = existing.img
             else:
                 # Limpiar el nombre solo si el archivo es nuevo
                 if self.img != existing.img:
                     self.img.name = clean_filename(self.img.name)
-
         else:
-            # Si es un nuevo objeto, limpiar el nombre de archivo si existen
+            # Si es un nuevo objeto, limpiar el nombre del archivo si existe
             if self.img:
                 self.img.name = clean_filename(self.img.name)
-           
+
+        # Llamar al método save original
         super(Links, self).save(*args, **kwargs)
+
 
 class LinksAdmin(SearchAutoCompleteAdmin, admin.ModelAdmin):
     search_fields = ["titulo"]
@@ -145,12 +147,13 @@ class Paginas_Web(models.Model):
 
     def __str__(self):
         return self.titulo
+    
     def save(self, *args, **kwargs):
-        # Si el objeto ya existe (es una actualización)
-        if self.pk:
+        # Verificar si el objeto ya existe (es una actualización)
+        if self.pk and Paginas_Web.objects.filter(pk=self.pk).exists():
             existing = Paginas_Web.objects.get(pk=self.pk)
 
-             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            # Solo sobrescribir `img` si no se ha proporcionado un nuevo archivo
             if not self.img:
                 self.img = existing.img
             else:
@@ -158,7 +161,7 @@ class Paginas_Web(models.Model):
                 if self.img != existing.img:
                     self.img.name = clean_filename(self.img.name)
 
-             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            # Solo sobrescribir `file` si no se ha proporcionado un nuevo archivo
             if not self.file:
                 self.file = existing.file
             else:
@@ -171,6 +174,8 @@ class Paginas_Web(models.Model):
                 self.img.name = clean_filename(self.img.name)
             if self.file:
                 self.file.name = clean_filename(self.file.name)
+
+        # Llamar al método save original
         super(Paginas_Web, self).save(*args, **kwargs)
 
 
@@ -229,24 +234,25 @@ class Listado (models.Model):
         return self.titulo
 
     def save(self, *args, **kwargs):
-        # Si el objeto ya existe (es una actualización)
-        if self.pk:
+        # Verificar si el objeto ya existe (es una actualización)
+        if self.pk and Listado.objects.filter(pk=self.pk).exists():
             existing = Listado.objects.get(pk=self.pk)
 
-             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            # Solo sobrescribir `img` si no se ha proporcionado un nuevo archivo
             if not self.img:
                 self.img = existing.img
             else:
                 # Limpiar el nombre solo si el archivo es nuevo
                 if self.img != existing.img:
                     self.img.name = clean_filename(self.img.name)
-
         else:
-            # Si es un nuevo objeto, limpiar el nombre de archivo si existen
+            # Si es un nuevo objeto, limpiar el nombre del archivo si existe
             if self.img:
                 self.img.name = clean_filename(self.img.name)
-           
-        super(Listado ,self).save(*args, **kwargs)
+
+        # Llamar al método save original
+        super(Listado, self).save(*args, **kwargs)
+
 
 
 
@@ -293,24 +299,25 @@ class Card(models.Model):
     def __str__(self):
         return self.titulo
     def save(self, *args, **kwargs):
-        # Si el objeto ya existe (es una actualización)
-        if self.pk:
+        # Verificar si el objeto ya existe (es una actualización)
+        if self.pk and Card.objects.filter(pk=self.pk).exists():
             existing = Card.objects.get(pk=self.pk)
 
-             # Solo sobrescribir premiacion si se ha proporcionado un nuevo archivo
+            # Solo sobrescribir `img` si no se ha proporcionado un nuevo archivo
             if not self.img:
                 self.img = existing.img
             else:
                 # Limpiar el nombre solo si el archivo es nuevo
                 if self.img != existing.img:
                     self.img.name = clean_filename(self.img.name)
-
         else:
-            # Si es un nuevo objeto, limpiar el nombre de archivo si existen
+            # Si es un nuevo objeto, limpiar el nombre del archivo si existe
             if self.img:
                 self.img.name = clean_filename(self.img.name)
-           
-        super(Card ,self).save(*args, **kwargs)
+
+        # Llamar al método save original
+        super(Card, self).save(*args, **kwargs)
+
 
 
 class CardsAdmin(SearchAutoCompleteAdmin, admin.ModelAdmin):
