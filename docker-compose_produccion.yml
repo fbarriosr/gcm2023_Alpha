@@ -1,4 +1,5 @@
 version: "3.9"
+
 services:
   nginx-proxy:
     image: jwilder/nginx-proxy
@@ -9,12 +10,13 @@ services:
       - "443:443"
     volumes: 
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - /home/certs:/etc/nginx/certs:ro
-      - /etc/nginx/vhost.d
-      - /usr/share/nginx/html
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf  # Montar archivo nginx.conf
-      - static_volume:/code/staticfiles                  # Montar archivos estáticos
-      - media_volume:/code/media                         # Montar archivos de medios
+      - ./certs:/etc/nginx/certs:ro
+      - ./vhost.d:/etc/nginx/vhost.d
+      - ./html:/usr/share/nginx/html
+      - ./staticfiles:/code/staticfiles:ro  # Monta los archivos estáticos
+      - ./media:/code/media:ro             # Monta los archivos de medios
+    environment:
+      - NGINX_TEMPLATE=/etc/docker-gen/templates/nginx.tmpl
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
 
@@ -23,7 +25,7 @@ services:
     container_name: letsencrypt_cgm
     restart: always
     volumes:
-      - /home/certs:/etc/nginx/certs:rw
+      - ./certs:/etc/nginx/certs:rw
       - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
       - nginx-proxy
@@ -31,18 +33,17 @@ services:
   web:
     container_name: web_cgm
     restart: always
-    build: ./
+    build: .
     image: cgm:tag
     command: >
       sh -c "python manage.py collectstatic --noinput &&
              python manage.py migrate &&
              gunicorn djangoCgm.wsgi:application --bind 0.0.0.0:8000"
     volumes:
-      - .:/code
-      - static_volume:/code/staticfiles
-      - media_volume:/code/media
-      - ./.env:/code/.env  # Asegúrate de montar el archivo .env
-
+      - .:/code:rw
+      - ./staticfiles:/code/staticfiles:rw
+      - ./media:/code/media:rw
+      - ./.env:/code/.env:ro
     expose:
       - "8000"
     environment:
@@ -54,5 +55,7 @@ services:
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
 
 volumes:
-  static_volume: {}
-  media_volume: {}
+  static_volume:
+    driver: local
+  media_volume:
+    driver: local

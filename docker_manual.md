@@ -108,3 +108,16 @@ $ docker-compose exec web python manage.py reset_passwords
 docker-compose run web python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 
 ```
+### imagenes
+```
+docker-compose run --rm web python manage.py collectstatic --noinput
+rm -rf ./web/static
+rm -rf ./socio/static
+```
+
+### logs
+```
+docker logs web_cgm
+```
+
+

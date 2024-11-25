@@ -28,6 +28,8 @@ SECRET_KEY = env("SECRET_KEY")  # Lee SECRET_KEY del .env
 DEBUG = env("DEBUG")  # Activa DEBUG según el .env
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 
+print('ALLOWED_HOSTS',ALLOWED_HOSTS)
+
 # Seguridad adicional para producción
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
@@ -135,9 +137,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'web/static'),
     os.path.join(BASE_DIR, 'socios/static'),
-    os.path.join(BASE_DIR, 'capitan/static'),
-    os.path.join(BASE_DIR, 'tesorero/static'),
 ]
+
+if DEBUG== False:
+    STATICFILES_DIRS = []  # Vacío si no se necesita incluir otros directorios
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
