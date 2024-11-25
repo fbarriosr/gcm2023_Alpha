@@ -14,12 +14,20 @@ from django.shortcuts import redirect
 import os
 from django.utils.text import slugify
 
-
 # Genera las cuotas de todos los usuarios para el año requerido
 def generar_cuotas_grupal(año, monto_cuota, monto_descuento, monto_cargo):
-    
+    from .models import CuotaAnual, Cuota  # Importación local para evitar conflictos
+   
     # Verificamos si ya existe una CuotaAnual para el año especificado
-    cuota_anual, created = CuotaAnual.objects.get_or_create(año=año, defaults={'monto_cuota': monto_cuota, 'cargo': monto_cargo, 'descuento': monto_descuento})
+    cuota_anual = CuotaAnual.objects.filter(año=año).first()
+
+    if not cuota_anual:
+        cuota_anual = CuotaAnual.objects.create(
+            año=año,
+            monto_cuota=monto_cuota,
+            cargo=monto_cargo,
+            descuento=monto_descuento
+        )
 
     # Evitamos errores comprobando que existan usuarios antes de continuar
     if Usuario.objects.exists():
@@ -39,20 +47,22 @@ def generar_cuotas_grupal(año, monto_cuota, monto_descuento, monto_cargo):
                 for num_cuota in range(1,13):
                     mes_cuota = num_cuota + 2 if num_cuota <= 10 else num_cuota - 10
                     # Cuota.objects.create(usuario=usuario, año=cuota_anual, numero_cuota=num_cuota, mes=mes_cuota, order=num_cuota)
-                    cuotas.append(Cuota(usuario=usuario, año=cuota_anual, numero_cuota=num_cuota, mes=mes_cuota, order=num_cuota))
+                    cuotas.append(Cuota(usuario=usuario, año=cuota_anual, numero_cuota=num_cuota, mes=mes_cuota, order=num_cuota, estado_pago='A'))
         
         # Solo creamos las cuotas si no existen para el usuario y el año especificados
         if cuotas:
             Cuota.objects.bulk_create(cuotas)
-            return 'Operacion exitosa'
+            return  True, 'Operación exitosa'
         else:
-            return 'Las cuotas para el año y usuario especificados ya existen'
+            return False, 'Las cuotas para el año y usuario especificados ya existen'
     else:
-        return 'Deben existir primero usuarios en la BD.'
+        return False, 'Deben existir primero usuarios en la BD.'
 
 
 # Genera las cuotas de un nuevo socio para el año en curso si no se especifica uno
 def generar_cuotas_individual(rut, año):
+    from .models import CuotaAnual, Cuota   # Importación local para evitar conflictos
+   
     # Verificamos que el usuario exista
     usuario = Usuario.objects.filter(rut=rut).first()
     if usuario is None:
@@ -85,6 +95,8 @@ def generar_cuotas_individual(rut, año):
         
 
 def borrar_cuotas_grupal(año):
+    from .models import CuotaAnual, Cuota  # Importación local para evitar conflictos
+   
     if not CuotaAnual.objects.filter(año=año):
         return f'El año {año} no existe'
     
@@ -94,6 +106,8 @@ def borrar_cuotas_grupal(año):
 
 
 def borrar_cuotas_individual(rut, año):
+    from .models import CuotaAnual  # Importación local para evitar conflictos
+   
     # Verificamos que el usuario exista
     usuario = Usuario.objects.filter(rut=rut).first()
     if usuario is None:
@@ -113,6 +127,8 @@ def borrar_cuotas_individual(rut, año):
 
 
 def actualiza_cuota(email, año, mes):
+    from .models import CuotaAnual, Cuota  # Importación local para evitar conflictos
+   
     usuario = Usuario.objects.filter(email=email).first()
     print(f"Actualiza_cuota()=> usuario: {usuario}, año: {año}, mes: {mes}") 
 
@@ -135,6 +151,8 @@ def actualiza_cuota(email, año, mes):
     
 
 def restablecer_cuotas_individual(rut, año):
+    from .models import CuotaAnual, Cuota  # Importación local para evitar conflictos
+   
     # Verificamos que el usuario exista
     usuario = Usuario.objects.filter(rut=rut).first()
     if usuario is None:

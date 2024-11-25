@@ -533,7 +533,6 @@ class Cuota(models.Model):
     def __str__(self):
         return f"{self.usuario.primer_nombre} - {self.año.año} - Mes {self.mes}"
 
-
 class CuotasAdmin(SearchAutoCompleteAdmin, admin.ModelAdmin):
     list_display = ('usuario','año' , 'numero_cuota', 'estado_pago')
     autocomplete_fields = ['usuario']
